@@ -60,9 +60,61 @@ The dashboard provides a centralized interface for observing keyboard activity, 
 
 ## System Architecture
 
-The system follows a modular architecture in which each phase has a separate responsibility.
+```mermaid
+flowchart TB
+    subgraph Hardware["Hardware Layer"]
+        MCU["Arduino Pro Micro<br/>ATmega32U4"]
+    end
 
-![System Architecture](documentation/images/architecture.svg)
+    subgraph Attack["Phase 1 — USB HID Attack"]
+        HID["USB HID Keyboard Emulation"]
+        INJECT["Predefined Keystroke Injection"]
+        HID --> INJECT
+    end
+
+    subgraph Delivery["Phase 2 — Payload Delivery"]
+        SERVER["ngrok Remote Server"]
+        FETCH["Controlled Payload Retrieval"]
+        EXEC["     Payload Execution"]
+        SERVER --> FETCH --> EXEC
+    end
+
+    subgraph Detection["Phase 3 — HID Detection"]
+        MONITOR["Linux Input Monitor<br/>evdev"]
+        ANALYZER["Python Detection Engine"]
+        ANALYSIS["Behavioral Analysis<br/>WPM · Timing · Device Info"]
+        EVENTS["Structured Detection Events"]
+        MONITOR --> ANALYZER --> ANALYSIS --> EVENTS
+    end
+
+    subgraph Dashboard["Phase 4 — Monitoring Dashboard"]
+        API["Backend"]
+        UI["Dashboard"]
+        STATS["Live Statistics & Alerts"]
+        API --> UI --> STATS
+    end
+
+    HOST["Linux Host"]
+
+    MCU -->|"USB Connection"| HID
+    INJECT -->|"Keyboard Input"| HOST
+    HOST -->|"Controlled Lab Workflow"| FETCH
+    EXEC -->|"Lab Activity"| HOST
+    HOST --> MONITOR
+    EVENTS -->|"JSON Events"| API
+
+    classDef hardware fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef attack fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
+    classDef delivery fill:#ffedd5,stroke:#ea580c,color:#7c2d12
+    classDef detection fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef dashboard fill:#f3e8ff,stroke:#9333ea,color:#581c87
+
+    class MCU hardware
+    class HID,INJECT attack
+    class SERVER,FETCH,EXEC delivery
+    class MONITOR,ANALYZER,ANALYSIS,EVENTS detection
+    class API,WS,UI,STATS dashboard
+```
 
 
 ## Repository Structure
