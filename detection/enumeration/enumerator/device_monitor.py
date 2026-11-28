@@ -12,19 +12,12 @@ from enumerator.device_history import update_history
 from enumerator.event_publisher import publish_event
 
 
-OUTPUT_FILE = Path("output/device_events.jsonl")
+OUTPUT_FILE = Path("output/device_events.json")
 
 
 def current_time():
     return datetime.now(timezone.utc).isoformat()
 
-
-def save_event(event):
-
-    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
-
-    with OUTPUT_FILE.open("a", encoding="utf-8") as file:
-        file.write(json.dumps(event) + "\n")
 
 
 class USBMonitor:
@@ -84,7 +77,7 @@ class USBMonitor:
         else:
             return
 
-        save_event(event)
+
 
         ### this is uncommented it if you want messages in the terminal for debug for example
         ## print(json.dumps(event, indent=4))
@@ -94,7 +87,7 @@ class USBMonitor:
 
 
 
-        
+
 
     def start(self):
 

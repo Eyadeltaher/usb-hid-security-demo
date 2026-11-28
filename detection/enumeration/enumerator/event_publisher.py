@@ -23,6 +23,9 @@ def publish_event(event):
 
     with OUTPUT_FILE.open("a", encoding="utf-8") as file:
         file.write(json.dumps(event) + "\n")
+        file.flush()
+    
+    print(f"[+] Event saved: {OUTPUT_FILE}")
 
     # 2. Send event to Detection Engine
     try:
