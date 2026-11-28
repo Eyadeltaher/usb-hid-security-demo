@@ -18,25 +18,35 @@ def get_interfaces(device_path):
 
     interfaces = []
 
-    for interface_path in device_path.parent.glob(
-        device_path.name + ":*"
-    ):
+    # Interface directories are children of the USB device directory.
+    for interface_path in device_path.glob(device_path.name + ":*"):
+
+        interface_class = read_file(
+            interface_path / "bInterfaceClass"
+        )
+
+        interface_subclass = read_file(
+            interface_path / "bInterfaceSubClass"
+        )
+
+        interface_protocol = read_file(
+            interface_path / "bInterfaceProtocol"
+        )
+
         interface = {
             "name": interface_path.name,
-            "class": read_file(interface_path / "bInterfaceClass"),
-            "subclass": read_file(interface_path / "bInterfaceSubClass"),
-            "protocol": read_file(interface_path / "bInterfaceProtocol")
+            "class": interface_class,
+            "subclass": interface_subclass,
+            "protocol": interface_protocol
         }
 
-        class_id = interface["class"]
-
-        if class_id == "03":
+        if interface_class == "03":
             interface["type"] = "HID"
-        elif class_id == "08":
+        elif interface_class == "08":
             interface["type"] = "Mass Storage"
-        elif class_id == "02":
+        elif interface_class == "02":
             interface["type"] = "Communications"
-        elif class_id == "0A":
+        elif interface_class == "0A":
             interface["type"] = "CDC Data"
         else:
             interface["type"] = "Other"

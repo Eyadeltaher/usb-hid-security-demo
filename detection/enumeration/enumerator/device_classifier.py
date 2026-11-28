@@ -1,4 +1,3 @@
-
 def classify_device(device):
 
     interfaces = device.get("interfaces", [])
@@ -10,6 +9,7 @@ def classify_device(device):
 
     device_types = []
 
+    # Interface-based classification
     if "HID" in interface_types:
         device_types.append("HID")
 
@@ -21,6 +21,12 @@ def classify_device(device):
 
     if "CDC Data" in interface_types:
         device_types.append("Serial/Data")
+
+    # Device-level classification
+    device_class = device.get("device_class")
+
+    if device_class == "09":
+        device_types.append("Hub")
 
     if not device_types:
         device_types.append("Unknown")

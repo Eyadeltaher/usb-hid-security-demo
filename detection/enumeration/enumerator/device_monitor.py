@@ -5,9 +5,9 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from enumeration.usb_enumerator import enumerate_usb
-from enumeration.device_classifier import classify_device
-from enumeration.device_history import update_history
+from enumerator.usb_enumerator import enumerate_usb
+from enumerator.device_classifier import classify_device
+from enumerator.device_history import update_history
 
 
 OUTPUT_FILE = Path("output/device_events.jsonl")

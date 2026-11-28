@@ -1,4 +1,4 @@
-from enumeration.device_monitor import USBMonitor
+from enumerator.device_monitor import USBMonitor
 
 
 def main():
