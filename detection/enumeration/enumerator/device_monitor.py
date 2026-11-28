@@ -9,6 +9,8 @@ from enumerator.usb_enumerator import enumerate_usb
 from enumerator.device_classifier import classify_device
 from enumerator.device_history import update_history
 
+from enumerator.event_publisher import publish_event
+
 
 OUTPUT_FILE = Path("output/device_events.jsonl")
 
@@ -84,7 +86,15 @@ class USBMonitor:
 
         save_event(event)
 
-        print(json.dumps(event, indent=4))
+        ### this is uncommented it if you want messages in the terminal for debug for example
+        ## print(json.dumps(event, indent=4))
+
+        publish_event(event)
+
+
+
+
+        
 
     def start(self):
 
